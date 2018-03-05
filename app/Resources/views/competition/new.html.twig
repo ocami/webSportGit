@@ -1,0 +1,143 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css">
+
+    <link rel="stylesheet" href="{{ asset('css/typeaheadjs.css') }}"/>
+
+
+{% endblock %}
+
+{% block title %}
+    Ajout Competétition
+{% endblock %}
+
+
+
+{% block body %}
+
+    <h1>Ajouter une compétition</h1>
+
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    {{ form_row(form.name) }}
+    {{ form_row(form.ville) }}
+    {{ form_row(form.adress) }}
+    {{ form_row(form.dep) }}
+
+    <label>Date</label>
+
+    <div class="row">
+        <div class="col-lg-offset-1 col-sm-4">
+            {{ form_row(form.dateStart) }}
+        </div>
+
+        <div class="col-lg-offset-1 col-sm-4">
+            {{ form_row(form.dateEnd) }}
+        </div>
+    </div>
+
+
+
+    <input type="submit" value="Valider" class="btn btn-default pull-right"/>
+
+    {{ form_end(form) }}
+
+    <div id="the-basics">
+        <input class="typeahead" type="text" placeholder="States of USA">
+    </div>
+
+{% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+        <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js"></script>
+        <script src="{{ asset('js/typeahead.bundle.js') }}"></script>
+
+
+        <script>
+
+
+            jQuery(document).ready(function () {
+                $.fn.datepicker.dates['fr'] = {
+                    days: ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
+                    daysShort: ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."],
+                    daysMin: ["D", "L", "M", "M", "J", "V", "S"],
+                    months: ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"],
+                    monthsShort: ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."],
+                    today: "Aujourd'hui",
+                    clear: "Clear",
+                    format: "dd/mm/yy",
+                    titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+                    weekStart: 1,
+
+                };
+
+
+                $('.datepicker').datepicker({
+                    language: 'fr',
+                    todayBtn: 'linked',
+                    autoclose: true,
+                    todayHighlight: true
+                });
+            });
+
+            $('.dpStart').on('changeDate', function () {
+                var startDate = $('.dpStart').datepicker('getDate');
+                $('.dpEnd').datepicker(
+                    'setStartDate', startDate
+                );
+            });
+
+
+            var substringMatcher = function (strs) {
+                return function findMatches(q, cb) {
+                    var matches, substringRegex;
+
+                    // an array that will be populated with substring matches
+                    matches = [];
+
+                    // regex used to determine if a string contains the substring `q`
+                    substrRegex = new RegExp(q, 'i');
+
+                    // iterate through the pool of strings and for any string that
+                    // contains the substring `q`, add it to the `matches` array
+                    $.each(strs, function (i, str) {
+                        if (substrRegex.test(str)) {
+                            matches.push(str);
+                        }
+                    });
+
+                    cb(matches);
+                };
+            };
+
+            var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
+                'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
+                'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
+                'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+                'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+                'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
+                'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
+                'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+                'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+            ];
+
+            $('#the-basics .typeahead').typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                },
+                {
+                    name: 'states',
+                    source: substringMatcher(states)
+                });
+
+
+        </script>
+
+    {% endblock %}
+

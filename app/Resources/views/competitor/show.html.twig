@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} index
+{% endblock %}
+
+{% block body %}
+
+    <p>Identifiant : {{ user.username }}</p>
+    <p>Mail : {{ user.email }}</p>
+
+    <p>Prénom : {{ competitor.firstName }}</p>
+    <p>Nom : {{ competitor.lastName }}</p>
+    <p>Sexe : {{ competitor.sexe }}</p>
+    <p>Date de naissance : {{ competitor.date|date("d/m/Y") }}</p>
+
+{% endblock %}
